@@ -387,8 +387,6 @@ jobs:
         with:
           node-version: 24
           cache: 'npm'
-          node-version: 24
-          cache: 'npm'
 
       - name: Cache Playwright browsers
         id: pw-cache-prod
