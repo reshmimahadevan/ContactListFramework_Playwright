@@ -1,6 +1,6 @@
 # ═══════════════════════════════════════════════════════════════
 # FILE: .github/workflows/master-pipeline.yml
-# REPO: https://github.com/reshmimahadevan/ContactListFramework_Playwright
+# REPO: reshmimahadevan/ContactListFramework_Playwright
 # DEV REPO: jglick/simple-maven-project-with-tests
 # ═══════════════════════════════════════════════════════════════
 # "Run up to environment" — the dropdown controls how far the
@@ -383,7 +383,9 @@ jobs:
           repository: reshmimahadevan/ContactListFramework_Playwright
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@
+        
+        v4
         with:
           node-version: 24
           cache: 'npm'
