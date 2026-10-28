@@ -1,0 +1,24 @@
+# Playwright
+node_modules/
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+/playwright/.auth/
+/reports/
+/reporting-labs/
+/allure-report/
+/allure-results/
+
+# Local overrides / anything secret (the committed config/.env.* files hold only public URLs)
+config/.env.local
+.env
+
+# build
+dist/
+
+# OS files
+.DS_Store
+
+# reportingLabs run history is cached in CI; remove this line if you want to commit it for the trend chart
+reporting-labs.history.json

@@ -1,0 +1,5 @@
+[
+    { "testName": "missing first name", "firstName": "", "lastName": "Missing", "phone": "4155550111" },
+    { "testName": "missing last name", "firstName": "Missing", "lastName": "", "phone": "4155550112" },
+    { "testName": "phone with letters", "firstName": "Bad", "lastName": "Phone", "phone": "41555abcde" }
+]

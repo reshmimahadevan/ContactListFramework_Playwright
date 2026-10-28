@@ -1,0 +1,11 @@
+{
+    "type": "object",
+    "properties": {
+        "_id": { "type": "string" },
+        "firstName": { "type": "string" },
+        "lastName": { "type": "string" },
+        "email": { "type": "string" },
+        "__v": { "type": "number" }
+    },
+    "required": ["_id", "firstName", "lastName", "email"]
+}

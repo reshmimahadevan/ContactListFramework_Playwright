@@ -1,0 +1,17 @@
+{
+    "type": "object",
+    "properties": {
+        "user": {
+            "type": "object",
+            "properties": {
+                "_id": { "type": "string" },
+                "firstName": { "type": "string" },
+                "lastName": { "type": "string" },
+                "email": { "type": "string" }
+            },
+            "required": ["_id", "firstName", "lastName", "email"]
+        },
+        "token": { "type": "string" }
+    },
+    "required": ["user", "token"]
+}

@@ -1,0 +1,25 @@
+node_modules
+reports
+allure-results
+allure-report
+test-results
+playwright-report
+.git
+.github
+config/.env.local
+dist
+*.log
+
+# reportingLabs output (the history file reporting-labs.history.json is still copied, for the trend)
+reporting-labs
+reporting-labs-merged
+
+# per-shard folders from docker-compose.shard.yml and their merged reports
+reports-shard*
+allure-shard*
+blob-shard*
+rl-shard*
+blob-report
+all-blob-reports
+all-allure-results
+merged-allure-report

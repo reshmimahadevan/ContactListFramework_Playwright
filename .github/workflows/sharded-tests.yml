@@ -1,0 +1,160 @@
+name: Sharded Playwright Tests
+
+on:
+  workflow_dispatch:
+    inputs:
+      shards:
+        description: 'Number of shards'
+        required: true
+        default: '4'
+        type: choice
+        options:
+          - '2'
+          - '4'
+
+jobs:
+  test:
+    name: Shard ${{ matrix.shard }}/${{ inputs.shards }}
+    strategy:
+      fail-fast: false
+      matrix:
+        # as many jobs as the shards you picked (2 → [1, 2], 4 → [1, 2, 3, 4])
+        shard: ${{ fromJSON(inputs.shards == '2' && '[1, 2]' || '[1, 2, 3, 4]') }}
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+
+      - name: Run shard ${{ matrix.shard }}/${{ inputs.shards }}
+        run: npx playwright test --project=chromium --shard=${{ matrix.shard }}/${{ inputs.shards }}
+        env:
+          ENV: qa
+          TEST_ENV: qa
+
+      - name: Upload shard HTML report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: html-report-shard-${{ matrix.shard }}
+          path: reports/html-report/
+          retention-days: 7
+
+      - name: Upload shard Allure results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: allure-results-shard-${{ matrix.shard }}
+          path: allure-results/
+          retention-days: 7
+
+      # Blob report (for the Playwright HTML merge)
+      - name: Upload blob report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: blob-report-shard-${{ matrix.shard }}
+          path: blob-report/
+          retention-days: 1
+
+      - name: Upload shard reportingLabs report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: reporting-labs-shard-${{ matrix.shard }}
+          path: reporting-labs/
+          retention-days: 7
+
+  merge-reports:
+    name: Merge All Reports
+    needs: test
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      # ─── MERGE PLAYWRIGHT HTML REPORT ──────────────────
+      - name: Download all blob reports
+        uses: actions/download-artifact@v4
+        with:
+          path: all-blob-reports
+          pattern: blob-report-*
+          merge-multiple: true
+
+      - name: Merge Playwright HTML report
+        run: npx playwright merge-reports --reporter=html ./all-blob-reports
+
+      - name: Upload merged Playwright HTML report
+        uses: actions/upload-artifact@v4
+        with:
+          name: merged-pw-html-report
+          path: playwright-report/
+          retention-days: 30
+
+      # ─── MERGE ALLURE REPORT ───────────────────────────
+      - name: Download all Allure results
+        uses: actions/download-artifact@v4
+        with:
+          path: all-allure-results
+          pattern: allure-results-shard-*
+
+      - name: Combine Allure results into a single folder
+        run: |
+          mkdir -p combined-allure-results
+          for dir in all-allure-results/allure-results-shard-*/; do
+            cp -r "$dir"* combined-allure-results/ 2>/dev/null || true
+          done
+          echo "Total allure result files:"
+          ls combined-allure-results/ | wc -l
+
+      - name: Generate merged Allure report
+        run: npx allure generate combined-allure-results --clean -o merged-allure-report
+
+      - name: Upload merged Allure report
+        uses: actions/upload-artifact@v4
+        with:
+          name: merged-allure-report
+          path: merged-allure-report/
+          retention-days: 30
+
+      # ─── MERGE REPORTINGLABS REPORT ────────────────────
+      - name: Download all reportingLabs reports
+        if: always()
+        uses: actions/download-artifact@v4
+        with:
+          path: all-reporting-labs
+          pattern: reporting-labs-shard-*
+
+      - name: Merge reportingLabs report
+        if: always()
+        run: npx --yes reporting-labs@latest merge ./all-reporting-labs -o merged-reporting-labs
+
+      - name: Upload merged reportingLabs report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: merged-reporting-labs-report
+          path: merged-reporting-labs/
+          retention-days: 30

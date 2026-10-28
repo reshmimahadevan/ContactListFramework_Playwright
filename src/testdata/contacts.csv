@@ -1,0 +1,5 @@
+firstName,lastName,birthdate,email,phone,street1,street2,city,stateProvince,postalCode,country
+Asha,Raman,1988-03-12,asha.raman@example.com,4155550101,12 Market Street,Floor 3,San Francisco,CA,94105,USA
+Ravi,Kumar,1992-11-30,ravi.kumar@example.com,5105550102,88 Lakeside Drive,,Oakland,CA,94612,USA
+Meera,Iyer,1985-07-04,meera.iyer@example.com,9255550103,4100 Main Street,Suite 200,Pleasanton,CA,94566,USA
+John,Smith,1979-01-22,john.smith@example.com,6505550104,500 Castro Street,,Mountain View,CA,94041,USA
