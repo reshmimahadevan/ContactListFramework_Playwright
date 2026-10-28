@@ -13,13 +13,13 @@ let contact = {
 //CRUD: create -> read -> update -> delete
 test.describe.serial('contact API: CRUD', () => {
 
-    test('@smoke POST API - sign up a user to get a token', async ({ apiHelper }) => {
+    test('@smoke @regression POST API - sign up a user to get a token', async ({ apiHelper }) => {
         let response = await apiHelper.post('/users', { firstName: 'Api', lastName: 'Tester', email: uniqueEmail('api.user@example.com'), password: process.env.LOGIN_PASSWORD });
         expect(response.status()).toBe(201);
         token = (await response.json()).token;
     });
     
-    test('@smoke POST API - add a contact', async ({ apiHelper }) => {
+    test('@smoke @regression POST API - add a contact', async ({ apiHelper }) => {
         let response = await apiHelper.post('/contacts', contact, { Authorization: `Bearer ${token}` });
         expect(response.status()).toBe(201);
 
