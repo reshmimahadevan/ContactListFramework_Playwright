@@ -1,6 +1,6 @@
 # ═══════════════════════════════════════════════════════════════
 # FILE: .github/workflows/master-pipeline.yml
-# REPO: reshmimahadevan/OpenCart_Playwright-Web-and-API-Framework
+# REPO: https://github.com/reshmimahadevan/ContactListFramework_Playwright
 # DEV REPO: jglick/simple-maven-project-with-tests
 # ═══════════════════════════════════════════════════════════════
 # "Run up to environment" — the dropdown controls how far the
@@ -85,7 +85,7 @@ jobs:
       - name: Checkout QA repo
         uses: actions/checkout@v4
         with:
-          repository: reshmimahadevan/OpenCart_Playwright-Web-and-API-Framework
+          repository: reshmimahadevan/ContactListFramework_Playwright
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -183,7 +183,7 @@ jobs:
       - name: Checkout QA repo
         uses: actions/checkout@v4
         with:
-          repository: reshmimahadevan/OpenCart_Playwright-Web-and-API-Framework
+          repository: reshmimahadevan/ContactListFramework_Playwright
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -225,14 +225,8 @@ jobs:
         env:
           ENV: qa
           BASE_URL: ${{ secrets.BASE_URL }}
-          LOGIN_EMAIL: ${{ secrets.LOGIN_EMAIL }}
-          LOGIN_PASSWORD: ${{ secrets.LOGIN_PASSWORD }}
           API_BASE_URL: ${{ secrets.API_BASE_URL }}
-          API_TOKEN: ${{ secrets.API_TOKEN }}
-          OAUTH_CLIENT_ID: ${{ secrets.OAUTH_CLIENT_ID }}
-          OAUTH_CLIENT_SECRET: ${{ secrets.OAUTH_CLIENT_SECRET }}
-          GRANT_TYPE: ${{ secrets.GRANT_TYPE }}
-          BOOKER_BASE_URL: ${{ secrets.BOOKER_BASE_URL }}
+          LOGIN_PASSWORD: ${{ secrets.LOGIN_PASSWORD }}
 
       - name: Generate Allure Report
         if: always()
@@ -287,7 +281,7 @@ jobs:
       - name: Checkout QA repo
         uses: actions/checkout@v4
         with:
-          repository: reshmimahadevan/OpenCart_Playwright-Web-and-API-Framework
+          repository: reshmimahadevan/ContactListFramework_Playwright
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -329,14 +323,8 @@ jobs:
         env:
           ENV: stage
           BASE_URL: ${{ secrets.BASE_URL }}
-          LOGIN_EMAIL: ${{ secrets.LOGIN_EMAIL }}
-          LOGIN_PASSWORD: ${{ secrets.LOGIN_PASSWORD }}
           API_BASE_URL: ${{ secrets.API_BASE_URL }}
-          API_TOKEN: ${{ secrets.API_TOKEN }}
-          OAUTH_CLIENT_ID: ${{ secrets.OAUTH_CLIENT_ID }}
-          OAUTH_CLIENT_SECRET: ${{ secrets.OAUTH_CLIENT_SECRET }}
-          GRANT_TYPE: ${{ secrets.GRANT_TYPE }}
-          BOOKER_BASE_URL: ${{ secrets.BOOKER_BASE_URL }}
+          LOGIN_PASSWORD: ${{ secrets.LOGIN_PASSWORD }}
 
       - name: Generate Allure Report
         if: always()
@@ -392,7 +380,7 @@ jobs:
       - name: Checkout QA repo
         uses: actions/checkout@v4
         with:
-          repository: reshmimahadevan/OpenCart_Playwright-Web-and-API-Framework
+          repository: reshmimahadevan/ContactListFramework_Playwright
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -434,14 +422,8 @@ jobs:
         env:
           ENV: prod
           BASE_URL: ${{ secrets.BASE_URL }}
-          LOGIN_EMAIL: ${{ secrets.LOGIN_EMAIL }}
-          LOGIN_PASSWORD: ${{ secrets.LOGIN_PASSWORD }}
           API_BASE_URL: ${{ secrets.API_BASE_URL }}
-          API_TOKEN: ${{ secrets.API_TOKEN }}
-          OAUTH_CLIENT_ID: ${{ secrets.OAUTH_CLIENT_ID }}
-          OAUTH_CLIENT_SECRET: ${{ secrets.OAUTH_CLIENT_SECRET }}
-          GRANT_TYPE: ${{ secrets.GRANT_TYPE }}
-          BOOKER_BASE_URL: ${{ secrets.BOOKER_BASE_URL }}
+          LOGIN_PASSWORD: ${{ secrets.LOGIN_PASSWORD }}
 
       - name: Generate Allure Report
         if: always()
