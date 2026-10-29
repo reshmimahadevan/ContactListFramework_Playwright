@@ -455,15 +455,50 @@ jobs:
           path: reporting-labs/
           retention-days: 30
 
+  # ═════════════════════════════════════════════════════
+  # PUBLISH REPORTS TO GITHUB PAGES (branch gh-pages)
+  #   ➜ Runs after every test job, whichever stage you stop at:
+  #     dev → DEV report, qa → DEV + QA, stage → + STAGE, Prod → + PROD
+  #   ➜ Runs even when tests fail, so the report is always published
+  #   ➜ Only environments that ran in this run appear on the page
+  # ═════════════════════════════════════════════════════
+  publish-pages:
+    name: Publish reports to GitHub Pages
+    needs: [sanity-dev, regression-qa, sanity-stage, smoke-prod]
+    if: always() && needs.sanity-dev.result != 'skipped'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write        # needed to push the gh-pages branch
+    steps:
+      - name: Download all reportingLabs reports
+        uses: actions/download-artifact@v4
+        with:
+          pattern: '*-reportinglabs-report'
+          path: pages-deploy
+
+      - name: Build the Pages index page
+        run: |
+          mkdir -p pages-deploy
+          cd pages-deploy
+          {
+            echo '<!doctype html><html><head><meta charset="utf-8"><title>Contact List - Test Reports</title></head>'
+            echo '<body style="font-family:sans-serif;max-width:640px;margin:40px auto">'
+            echo '<h1>Contact List - Test Reports</h1><ul>'
+            for d in dev-sanity qa-regression stage-sanity prod-smoke; do
+              if [ -d "${d}-reportinglabs-report" ]; then
+                echo "<li><a href=\"${d}-reportinglabs-report/index.html\">${d}</a></li>"
+              fi
+            done
+            echo '</ul></body></html>'
+          } > index.html
+          ls -R .
+
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: pages-deploy
-          keep_files: true
-
-
-          
+          keep_files: false
 
   # ═════════════════════════════════════════════════════
   # PIPELINE SUMMARY (always runs — handles skipped jobs)
