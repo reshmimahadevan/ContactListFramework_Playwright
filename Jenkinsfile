@@ -49,7 +49,7 @@ pipeline {
                 echo "Installing Playwright Dependencies"
                 dir('qa-tests') {
                     git url: 'https://github.com/reshmimahadevan/ContactListFramework_Playwright.git',
-                        branch: 'main'
+                        branch: 'master'
                     bat 'npm ci'
                     bat 'npx playwright install chromium'
                 }
@@ -339,48 +339,6 @@ pipeline {
     }
 
     post {
-        always {
-            script {
-                def buildStatus = currentBuild.currentResult
-                def statusEmoji = buildStatus == 'SUCCESS' ? '✅' : '❌'
-                def duration = currentBuild.durationString.replace(' and counting', '')
-
-                emailext(
-                    to: 'your-email@example.com',
-                    subject: "🎭 CI/CD Pipeline — ${statusEmoji} ${buildStatus} — Build #${env.BUILD_NUMBER}",
-                    mimeType: 'text/html',
-                    body: """
-                        <html>
-                        <body style="font-family: Arial, sans-serif; margin: 0; padding: 20px; background: #f5f5f5;">
-                            <div style="max-width: 700px; margin: 0 auto; background: white; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); overflow: hidden;">
-                                <div style="background: linear-gradient(135deg, #1a1a2e, #16213e); color: white; padding: 30px; text-align: center;">
-                                    <h1 style="margin: 0; font-size: 24px;">🎭 Playwright CI/CD Dashboard</h1>
-                                    <p style="margin: 8px 0 0; opacity: 0.8;">Master Pipeline Report</p>
-                                    <span style="display: inline-block; padding: 6px 16px; border-radius: 20px; font-weight: bold; font-size: 14px; margin-top: 12px; background: ${buildStatus == 'SUCCESS' ? '#28a745' : '#dc3545'}; color: white;">
-                                        ${statusEmoji} ${buildStatus}
-                                    </span>
-                                </div>
-                                <div style="padding: 24px;">
-                                    <table style="width: 100%; border-collapse: collapse;">
-                                        <tr><td style="padding: 10px; color: #666;">Pipeline</td><td style="padding: 10px; font-weight: bold;">DEV → QA → STAGE → PROD</td></tr>
-                                        <tr><td style="padding: 10px; color: #666;">Build</td><td style="padding: 10px; font-weight: bold;">#${env.BUILD_NUMBER}</td></tr>
-                                        <tr><td style="padding: 10px; color: #666;">Duration</td><td style="padding: 10px; font-weight: bold;">${duration}</td></tr>
-                                        <tr><td style="padding: 10px; color: #666;">Triggered by</td><td style="padding: 10px; font-weight: bold;">${currentBuild.getBuildCauses()[0]?.shortDescription ?: 'Manual'}</td></tr>
-                                    </table>
-                                </div>
-                                <div style="background: #f8f9fa; padding: 20px 24px; border-top: 1px solid #eee;">
-                                    <h3 style="margin: 0 0 12px;">📊 Reports (12 per build)</h3>
-                                    <p style="color: #666; font-size: 13px; margin: 0 0 12px;">Each test stage publishes PW HTML + Allure + ReportingLabs. Open the Jenkins build page and use the sidebar.</p>
-                                    <a href="${env.BUILD_URL}" style="display: inline-block; padding: 10px 20px; background: #1a1a2e; color: white; text-decoration: none; border-radius: 6px; margin: 4px;">📁 Open Jenkins Build</a>
-                                    <a href="${env.BUILD_URL}console" style="display: inline-block; padding: 10px 20px; background: #6c757d; color: white; text-decoration: none; border-radius: 6px; margin: 4px;">🔍 Console Logs</a>
-                                </div>
-                            </div>
-                        </body>
-                        </html>
-                    """
-                )
-            }
-        }
         success {
             echo 'PIPELINE: ✅ SUCCESS'
         }
