@@ -96,7 +96,10 @@ pipeline {
                         if not exist reports-dev\\reportinglabs mkdir reports-dev\\reportinglabs
                     '''
                     bat 'xcopy qa-tests\\reports\\html-report reports-dev\\html /E /I /Y /Q || exit /b 0'
-                    bat 'call allure generate qa-tests\\allure-results --clean -o reports-dev\\allure || exit /b 0'
+                    bat '''
+                        for /f "delims=" %%A in ('dir /s /b "C:\\Users\\reshm\\.jenkins\\tools\\org.allurereport.jenkins.tools.AllureCommandlineInstallation\\Allure\\allure.cmd" "C:\\Users\\reshm\\.jenkins\\tools\\org.allurereport.jenkins.tools.AllureCommandlineInstallation\\Allure\\allure.bat" 2^>nul') do set ALLURE_BIN=%%A
+                        call "%ALLURE_BIN%" generate qa-tests\\allure-results --clean -o reports-dev\\allure || exit /b 0
+                    '''
                     bat 'xcopy qa-tests\\reporting-labs reports-dev\\reportinglabs /E /I /Y /Q || exit /b 0'
                     publishHTML(target: [
                         reportName: 'DEV Sanity - PW HTML Report',
@@ -163,7 +166,10 @@ pipeline {
                         if not exist reports-qa\\reportinglabs mkdir reports-qa\\reportinglabs
                     '''
                     bat 'xcopy qa-tests\\reports\\html-report reports-qa\\html /E /I /Y /Q || exit /b 0'
-                    bat 'call allure generate qa-tests\\allure-results --clean -o reports-qa\\allure || exit /b 0'
+                    bat '''
+                        for /f "delims=" %%A in ('dir /s /b "C:\\Users\\reshm\\.jenkins\\tools\\org.allurereport.jenkins.tools.AllureCommandlineInstallation\\Allure\\allure.cmd" "C:\\Users\\reshm\\.jenkins\\tools\\org.allurereport.jenkins.tools.AllureCommandlineInstallation\\Allure\\allure.bat" 2^>nul') do set ALLURE_BIN=%%A
+                        call "%ALLURE_BIN%" generate qa-tests\\allure-results --clean -o reports-qa\\allure || exit /b 0
+                    '''
                     bat 'xcopy qa-tests\\reporting-labs reports-qa\\reportinglabs /E /I /Y /Q || exit /b 0'
                     publishHTML(target: [
                         reportName: 'QA Regression - PW HTML Report',
@@ -230,7 +236,10 @@ pipeline {
                         if not exist reports-stage\\reportinglabs mkdir reports-stage\\reportinglabs
                     '''
                     bat 'xcopy qa-tests\\reports\\html-report reports-stage\\html /E /I /Y /Q || exit /b 0'
-                    bat 'call allure generate qa-tests\\allure-results --clean -o reports-stage\\allure || exit /b 0'
+                    bat '''
+                        for /f "delims=" %%A in ('dir /s /b "C:\\Users\\reshm\\.jenkins\\tools\\org.allurereport.jenkins.tools.AllureCommandlineInstallation\\Allure\\allure.cmd" "C:\\Users\\reshm\\.jenkins\\tools\\org.allurereport.jenkins.tools.AllureCommandlineInstallation\\Allure\\allure.bat" 2^>nul') do set ALLURE_BIN=%%A
+                        call "%ALLURE_BIN%" generate qa-tests\\allure-results --clean -o reports-stage\\allure || exit /b 0
+                    '''
                     bat 'xcopy qa-tests\\reporting-labs reports-stage\\reportinglabs /E /I /Y /Q || exit /b 0'
                     publishHTML(target: [
                         reportName: 'STAGE Sanity - PW HTML Report',
@@ -310,7 +319,10 @@ pipeline {
                         if not exist reports-prod\\reportinglabs mkdir reports-prod\\reportinglabs
                     '''
                     bat 'xcopy qa-tests\\reports\\html-report reports-prod\\html /E /I /Y /Q || exit /b 0'
-                    bat 'call allure generate qa-tests\\allure-results --clean -o reports-prod\\allure || exit /b 0'
+                    bat '''
+                        for /f "delims=" %%A in ('dir /s /b "C:\\Users\\reshm\\.jenkins\\tools\\org.allurereport.jenkins.tools.AllureCommandlineInstallation\\Allure\\allure.cmd" "C:\\Users\\reshm\\.jenkins\\tools\\org.allurereport.jenkins.tools.AllureCommandlineInstallation\\Allure\\allure.bat" 2^>nul') do set ALLURE_BIN=%%A
+                        call "%ALLURE_BIN%" generate qa-tests\\allure-results --clean -o reports-prod\\allure || exit /b 0
+                    '''
                     bat 'xcopy qa-tests\\reporting-labs reports-prod\\reportinglabs /E /I /Y /Q || exit /b 0'
                     publishHTML(target: [
                         reportName: 'PROD Smoke - PW HTML Report',
