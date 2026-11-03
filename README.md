@@ -199,8 +199,5 @@ I'm Reshmi, an SDET and QA automation engineer based in the San Francisco Bay Ar
 - LinkedIn: [linkedin.com/in/reshmi-mahadevan](https://linkedin.com/in/reshmi-mahadevan)
 - GitHub: [github.com/reshmimahadevan](https://github.com/reshmimahadevan)
 
----
-
-## License
 
 This project is for learning and portfolio purposes. Feel free to read, fork and learn from it.
