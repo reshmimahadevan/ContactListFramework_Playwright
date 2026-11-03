@@ -4,6 +4,11 @@ An end-to-end test automation framework for the [Thinking Tester Contact List ap
 
 I built this to learn how a real-world QA framework fits together, from the first test to a CI/CD pipeline that runs it, so it covers the whole path rather than just the test code.
 
+![CI](https://github.com/reshmimahadevan/ContactListFramework_Playwright/actions/workflows/master.yml/badge.svg)
+![Playwright](https://img.shields.io/badge/Playwright-1.64-45ba4b?logo=playwright&logoColor=white)
+![TypeScript](https://img.shields.io/badge/TypeScript-3178c6?logo=typescript&logoColor=white)
+![Node](https://img.shields.io/badge/Node-24-339933?logo=nodedotjs&logoColor=white)
+
 ---
 
 ## What's in here
@@ -50,11 +55,14 @@ contact_list_framework/
 ├── src/                       # Page objects, API clients, utilities, test data helpers
 ├── tests/                     # Spec files (API + UI)
 ├── reports/                   # Generated reports
+├── docs/images/               # Screenshots used in this README
+├── .dockerignore
 ├── Dockerfile                 # Test runner image
 ├── docker-compose.shard.yml   # Runs the suite as parallel shards
 ├── Jenkinsfile                # Multi-environment pipeline
 ├── playwright.config.ts       # Playwright settings
 ├── reporting-labs.config.ts   # Report configuration
+├── tsconfig.json              # TypeScript settings
 └── package.json
 ```
 
@@ -112,6 +120,8 @@ npx reporting-labs merge rl-shard1 rl-shard2 rl-shard3 rl-shard4 -o reporting-la
 
 Then open `reporting-labs-merged/index.html`.
 
+> Note: adjust the paths and script names above if your local setup differs. Everything is driven by `package.json` and the config files at the root.
+
 ---
 
 ## CI/CD
@@ -133,36 +143,39 @@ The Contact List app is a single public website. It has no separate DEV, QA, STA
 
 So every test stage runs against the same public URL. What the pipeline demonstrates is the *structure* (stage ordering, which test pack runs at which gate, an approval step, post-build reporting), not real deployments. In a company setup, the `echo` lines would be replaced with real deploy steps (Helm, Docker, a deploy script or an API call) and each environment would get its own base URL and credentials.
 
-![Jenkins pipeline]<img width="1920" height="1020" alt="image" src="https://github.com/user-attachments/assets/f3007b68-72c3-4c9f-9c32-138d73e64bd0" />
+![Jenkins pipeline](docs/images/jenkins-pipeline.png)
 
+### GitHub Actions
 
-GitHub Actions
+I have two workflows in `.github/workflows/`, both started manually with `workflow_dispatch`:
 
-I have two workflows in .github/workflows/, both started manually with workflow_dispatch:
+**1. `master.yml` – Master CI/CD Pipeline**
+The same promotion flow as the Jenkins pipeline, built as chained jobs: Build & Unit Tests → Deploy to DEV → DEV – Sanity Tests → Deploy to QA → QA – Regression Tests → Deploy to STAGE → STAGE – Sanity Tests → Deploy to PROD → PROD – Smoke Tests. At the end, a job publishes the reports to **GitHub Pages** and another writes a pipeline summary. As with Jenkins, there is only one real site under test, so the environment stages are a model of the flow rather than separate deployments.
 
-1. master.yml – Master CI/CD Pipeline The same promotion flow as the Jenkins pipeline, built as chained jobs: Build & Unit Tests → Deploy to DEV → DEV – Sanity Tests → Deploy to QA → QA – Regression Tests → Deploy to STAGE → STAGE – Sanity Tests → Deploy to PROD → PROD – Smoke Tests. At the end, a job publishes the reports to GitHub Pages and another writes a pipeline summary. As with Jenkins, there is only one real site under test, so the environment stages are a model of the flow rather than separate deployments.
+![Master CI/CD pipeline in GitHub Actions](docs/images/github-actions-master.png)
 
-Master CI/CD pipeline in GitHub Actions
+**2. `sharded-tests.yml` – Sharded Playwright Tests**
+Runs the suite as a matrix of 4 parallel shards (Shard 1/4 to 4/4), then a **Merge All Reports** job combines the partial reports into one. The latest run finished in about 1.5 minutes, with the merge step taking 23 seconds.
 
-2. sharded-tests.yml – Sharded Playwright Tests Runs the suite as a matrix of 4 parallel shards (Shard 1/4 to 4/4), then a Merge All Reports job combines the partial reports into one. The latest run finished in about 1.5 minutes, with the merge step taking 23 seconds.
+![Sharded Playwright tests in GitHub Actions](docs/images/github-actions-sharded.png)
 
-Sharded Playwright tests in GitHub Actions
+Both workflows upload reports and traces as artifacts. Because they use `workflow_dispatch`, I start them by hand from the **Actions** tab with **Run workflow**. They don't run automatically on pull requests or pushes yet (see Future improvements).
 
-Both workflows upload reports and traces as artifacts. Because they use workflow_dispatch, I start them by hand from the Actions tab with Run workflow. They don't run automatically on pull requests or pushes yet (see Future improvements).
-
-Sharding and a merged report
+### Sharding and a merged report
 
 Large suites get slow, so I split the run into shards in two places:
 
-GitHub Actions (sharded-tests.yml): a matrix of 4 shards, followed by a merge job.
-Docker (locally): 4 shards running side by side (shard1 to shard4) from docker-compose.shard.yml.
+- **GitHub Actions (`sharded-tests.yml`):** a matrix of 4 shards, followed by a merge job.
+- **Docker (locally):** 4 shards running side by side (`shard1` to `shard4`) from `docker-compose.shard.yml`.
 
 Every shard produces its own partial report, and the merge step combines them into one report:
 
-Merging shard reports
+![Merging shard reports](docs/images/merge-reports.png)
 
+```
 Merging 4 shards into reporting-labs-merged
   merged: 56 tests · 56 passed · 0 failed · 0 flaky · 0 skipped
+```
 
 The example above is from the Docker run.
 
@@ -172,8 +185,7 @@ The example above is from the Docker run.
 
 Every run produces a report that shows pass rate, a full test table (spec, priority, owner, duration), duration distribution, and an environment summary (Playwright version, Node, OS, browser, commit, branch, workers, shards). Failing or retried tests keep their **trace** and **video** so I can replay exactly what happened.
 
-
-A PDF copy of the latest report is in [`Contact List – regression suite.pdf`](Contact%20List%20–%20regression%20suite.pdf).
+A PDF copy of the latest report is in [`Contact List – regression suite.pdf`](Contact%20List%20%E2%80%93%20regression%20suite.pdf).
 
 ---
 
@@ -198,7 +210,7 @@ The app under test is one public site, so there was nothing real to deploy to. R
 ## Future improvements
 
 - **Fill in test metadata**: only a handful of tests have a priority and owner right now, so the failure-category and trend charts in the report have little to show. Tagging every test with `priority` and `owner` fixes that.
-- **Run CI automatically**: the GitHub Actions workflow is currently triggered only with `workflow_dispatch`, so I have to press **Run workflow** every time. The next step is adding `pull_request` (and `push` to `master`) triggers, so every change is tested before it's merged.
+- **Run CI automatically**: both GitHub Actions workflows are currently triggered only with `workflow_dispatch`, so I have to press **Run workflow** every time. The next step is adding `pull_request` (and `push` to `master`) triggers, so every change is tested before it's merged.
 - **Real environments and deployments**: replace the `echo` deploy stages in the Jenkins pipeline with real deploy steps, and give each environment its own base URL and credentials, ideally by pointing at an app I host myself.
 
 ---
@@ -210,3 +222,8 @@ I'm Reshmi, an SDET and QA automation engineer based in the San Francisco Bay Ar
 - LinkedIn: [linkedin.com/in/reshmi-mahadevan](https://linkedin.com/in/reshmi-mahadevan)
 - GitHub: [github.com/reshmimahadevan](https://github.com/reshmimahadevan)
 
+---
+
+## License
+
+This project is for learning and portfolio purposes. Feel free to read, fork and learn from it.
