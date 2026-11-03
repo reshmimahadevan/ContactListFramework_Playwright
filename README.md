@@ -136,20 +136,35 @@ So every test stage runs against the same public URL. What the pipeline demonstr
 ![Jenkins pipeline]<img width="1920" height="1020" alt="image" src="https://github.com/user-attachments/assets/f3007b68-72c3-4c9f-9c32-138d73e64bd0" />
 
 
-### GitHub Actions
+GitHub Actions
 
-The workflow in `.github/` runs the suite split into shards that run in parallel (2 workers per shard, 4 workers in total). Reports and traces are uploaded as artifacts. It is currently set to `workflow_dispatch`, so I start it by hand from the **Actions** tab with the **Run workflow** button. It doesn't yet run automatically on pull requests or pushes (see Future improvements).
+I have two workflows in .github/workflows/, both started manually with workflow_dispatch:
 
-### Sharding and a merged report
+1. master.yml – Master CI/CD Pipeline The same promotion flow as the Jenkins pipeline, built as chained jobs: Build & Unit Tests → Deploy to DEV → DEV – Sanity Tests → Deploy to QA → QA – Regression Tests → Deploy to STAGE → STAGE – Sanity Tests → Deploy to PROD → PROD – Smoke Tests. At the end, a job publishes the reports to GitHub Pages and another writes a pipeline summary. As with Jenkins, there is only one real site under test, so the environment stages are a model of the flow rather than separate deployments.
 
-Large suites get slow, so the run is split into shards. Each shard produces its own partial report, and the merge step combines them into one:
+Master CI/CD pipeline in GitHub Actions
 
-![Merging shard reports](docs/images/merge-reports.png)
+2. sharded-tests.yml – Sharded Playwright Tests Runs the suite as a matrix of 4 parallel shards (Shard 1/4 to 4/4), then a Merge All Reports job combines the partial reports into one. The latest run finished in about 1.5 minutes, with the merge step taking 23 seconds.
 
-```
+Sharded Playwright tests in GitHub Actions
+
+Both workflows upload reports and traces as artifacts. Because they use workflow_dispatch, I start them by hand from the Actions tab with Run workflow. They don't run automatically on pull requests or pushes yet (see Future improvements).
+
+Sharding and a merged report
+
+Large suites get slow, so I split the run into shards in two places:
+
+GitHub Actions (sharded-tests.yml): a matrix of 4 shards, followed by a merge job.
+Docker (locally): 4 shards running side by side (shard1 to shard4) from docker-compose.shard.yml.
+
+Every shard produces its own partial report, and the merge step combines them into one report:
+
+Merging shard reports
+
 Merging 4 shards into reporting-labs-merged
   merged: 56 tests · 56 passed · 0 failed · 0 flaky · 0 skipped
-```
+
+The example above is from the Docker run.
 
 ---
 
