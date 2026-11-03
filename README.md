@@ -4,11 +4,6 @@ An end-to-end test automation framework for the [Thinking Tester Contact List ap
 
 I built this to learn how a real-world QA framework fits together, from the first test to a CI/CD pipeline that runs it, so it covers the whole path rather than just the test code.
 
-Jenkins:<img width="1920" height="1020" alt="image" src="https://github.com/user-attachments/assets/562ec678-50f9-4094-8d5b-b5e7ebdc58c4" />
-GitHubActions:
-Docker:
-Whole Report:
-
 ---
 
 ## What's in here
@@ -117,8 +112,6 @@ npx reporting-labs merge rl-shard1 rl-shard2 rl-shard3 rl-shard4 -o reporting-la
 
 Then open `reporting-labs-merged/index.html`.
 
-> Note: adjust the paths and script names above if your local setup differs. Everything is driven by `package.json` and the config files at the root.
-
 ---
 
 ## CI/CD
@@ -140,7 +133,8 @@ The Contact List app is a single public website. It has no separate DEV, QA, STA
 
 So every test stage runs against the same public URL. What the pipeline demonstrates is the *structure* (stage ordering, which test pack runs at which gate, an approval step, post-build reporting), not real deployments. In a company setup, the `echo` lines would be replaced with real deploy steps (Helm, Docker, a deploy script or an API call) and each environment would get its own base URL and credentials.
 
-![Jenkins pipeline](docs/images/jenkins-pipeline.png)
+![Jenkins pipeline]<img width="1920" height="1020" alt="image" src="https://github.com/user-attachments/assets/f3007b68-72c3-4c9f-9c32-138d73e64bd0" />
+
 
 ### GitHub Actions
 
@@ -163,9 +157,8 @@ Merging 4 shards into reporting-labs-merged
 
 Every run produces a report that shows pass rate, a full test table (spec, priority, owner, duration), duration distribution, and an environment summary (Playwright version, Node, OS, browser, commit, branch, workers, shards). Failing or retried tests keep their **trace** and **video** so I can replay exactly what happened.
 
-![Test report](docs/images/report-overview.png)
 
-A PDF copy of the latest report is in [`docs/Contact_List_regression_suite.pdf`](docs/Contact_List_regression_suite.pdf).
+A PDF copy of the latest report is in [`Contact List – regression suite.pdf`](Contact%20List%20–%20regression%20suite.pdf).
 
 ---
 
