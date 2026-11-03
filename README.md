@@ -4,7 +4,10 @@ An end-to-end test automation framework for the [Thinking Tester Contact List ap
 
 I built this to learn how a real-world QA framework fits together, from the first test to a CI/CD pipeline that runs it, so it covers the whole path rather than just the test code.
 
-
+Jenkins:<img width="1920" height="1020" alt="image" src="https://github.com/user-attachments/assets/562ec678-50f9-4094-8d5b-b5e7ebdc58c4" />
+GitHubActions:
+Docker:
+Whole Report:
 
 ---
 
@@ -199,5 +202,3 @@ I'm Reshmi, an SDET and QA automation engineer based in the San Francisco Bay Ar
 - LinkedIn: [linkedin.com/in/reshmi-mahadevan](https://linkedin.com/in/reshmi-mahadevan)
 - GitHub: [github.com/reshmimahadevan](https://github.com/reshmimahadevan)
 
-
-This project is for learning and portfolio purposes. Feel free to read, fork and learn from it.
