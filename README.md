@@ -175,7 +175,7 @@ The example above is from the Docker run.
 
 Every run produces a report that shows pass rate, a full test table (spec, priority, owner, duration), duration distribution, and an environment summary (Playwright version, Node, OS, browser, commit, branch, workers, shards). Failing or retried tests keep their trace and video so I can replay exactly what happened.
 
-Live reports: every run of the Master CI/CD Pipeline publishes its reports to GitHub Pages, so you can open them without running anything: Contact List – Test Reports
+Live reports: every run of the Master CI/CD Pipeline publishes its reports to GitHub Pages, so you can open them without running anything: [Contact List – Test Reports](https://reshmimahadevan.github.io/ContactListFramework_Playwright/)
 
 The page links to one report per pipeline stage:
 
