@@ -4,11 +4,6 @@ An end-to-end test automation framework for the [Thinking Tester Contact List ap
 
 I built this to learn how a real-world QA framework fits together, from the first test to a CI/CD pipeline that runs it, so it covers the whole path rather than just the test code.
 
-![CI](https://github.com/reshmimahadevan/ContactListFramework_Playwright/actions/workflows/master.yml/badge.svg)
-![Playwright](https://img.shields.io/badge/Playwright-1.64-45ba4b?logo=playwright&logoColor=white)
-![TypeScript](https://img.shields.io/badge/TypeScript-3178c6?logo=typescript&logoColor=white)
-![Node](https://img.shields.io/badge/Node-24-339933?logo=nodedotjs&logoColor=white)
-
 ---
 
 ## What's in here
@@ -120,8 +115,6 @@ npx reporting-labs merge rl-shard1 rl-shard2 rl-shard3 rl-shard4 -o reporting-la
 
 Then open `reporting-labs-merged/index.html`.
 
-> Note: adjust the paths and script names above if your local setup differs. Everything is driven by `package.json` and the config files at the root.
-
 ---
 
 ## CI/CD
@@ -143,7 +136,8 @@ The Contact List app is a single public website. It has no separate DEV, QA, STA
 
 So every test stage runs against the same public URL. What the pipeline demonstrates is the *structure* (stage ordering, which test pack runs at which gate, an approval step, post-build reporting), not real deployments. In a company setup, the `echo` lines would be replaced with real deploy steps (Helm, Docker, a deploy script or an API call) and each environment would get its own base URL and credentials.
 
-![Jenkins pipeline](docs/images/jenkins-pipeline.png)
+![Jenkins pipeline]<img width="1920" height="1020" alt="image" src="https://github.com/user-attachments/assets/b943e75f-d771-4113-8693-111e9d0a1b1b" />
+
 
 ### GitHub Actions
 
@@ -152,12 +146,14 @@ I have two workflows in `.github/workflows/`, both started manually with `workfl
 **1. `master.yml` – Master CI/CD Pipeline**
 The same promotion flow as the Jenkins pipeline, built as chained jobs: Build & Unit Tests → Deploy to DEV → DEV – Sanity Tests → Deploy to QA → QA – Regression Tests → Deploy to STAGE → STAGE – Sanity Tests → Deploy to PROD → PROD – Smoke Tests. At the end, a job publishes the reports to **GitHub Pages** and another writes a pipeline summary. As with Jenkins, there is only one real site under test, so the environment stages are a model of the flow rather than separate deployments.
 
-![Master CI/CD pipeline in GitHub Actions](docs/images/github-actions-master.png)
+![Master CI/CD pipeline in GitHub Actions]<img width="1920" height="1020" alt="image" src="https://github.com/user-attachments/assets/3a9833b7-db97-4407-9465-be8a1dbad0b8" />
+
 
 **2. `sharded-tests.yml` – Sharded Playwright Tests**
 Runs the suite as a matrix of 4 parallel shards (Shard 1/4 to 4/4), then a **Merge All Reports** job combines the partial reports into one. The latest run finished in about 1.5 minutes, with the merge step taking 23 seconds.
 
-![Sharded Playwright tests in GitHub Actions](docs/images/github-actions-sharded.png)
+![Sharded Playwright tests in GitHub Actions]<img width="1920" height="1020" alt="image" src="https://github.com/user-attachments/assets/4f970398-cd5a-49f4-a26c-826e48521800" />
+
 
 Both workflows upload reports and traces as artifacts. Because they use `workflow_dispatch`, I start them by hand from the **Actions** tab with **Run workflow**. They don't run automatically on pull requests or pushes yet (see Future improvements).
 
@@ -180,10 +176,18 @@ Merging 4 shards into reporting-labs-merged
 The example above is from the Docker run.
 
 ---
-
 ## Reports
 
-Every run produces a report that shows pass rate, a full test table (spec, priority, owner, duration), duration distribution, and an environment summary (Playwright version, Node, OS, browser, commit, branch, workers, shards). Failing or retried tests keep their **trace** and **video** so I can replay exactly what happened.
+Every run produces a report that shows pass rate, a full test table (spec, priority, owner, duration), duration distribution, and an environment summary (Playwright version, Node, OS, browser, commit, branch, workers, shards). Failing or retried tests keep their trace and video so I can replay exactly what happened.
+
+Live reports: every run of the Master CI/CD Pipeline publishes its reports to GitHub Pages, so you can open them without running anything: Contact List – Test Reports
+
+The page links to one report per pipeline stage:
+
+DEV – Sanity
+QA – Regression
+STAGE – Sanity
+PROD – Smoke
 
 A PDF copy of the latest report is in [`Contact List – regression suite.pdf`](Contact%20List%20%E2%80%93%20regression%20suite.pdf).
 
@@ -223,7 +227,3 @@ I'm Reshmi, an SDET and QA automation engineer based in the San Francisco Bay Ar
 - GitHub: [github.com/reshmimahadevan](https://github.com/reshmimahadevan)
 
 ---
-
-## License
-
-This project is for learning and portfolio purposes. Feel free to read, fork and learn from it.
