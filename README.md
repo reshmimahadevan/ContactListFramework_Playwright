@@ -152,7 +152,7 @@ The same promotion flow as the Jenkins pipeline, built as chained jobs: Build & 
 **2. `sharded-tests.yml` – Sharded Playwright Tests**
 Runs the suite as a matrix of 4 parallel shards (Shard 1/4 to 4/4), then a **Merge All Reports** job combines the partial reports into one. The latest run finished in about 1.5 minutes, with the merge step taking 23 seconds.
 
-![Sharded Playwright tests in GitHub Actions]<img width="1920" height="1020" alt="image" src="https://github.com/user-attachments/assets/4f970398-cd5a-49f4-a26c-826e48521800" />
+
 
 
 Both workflows upload reports and traces as artifacts. Because they use `workflow_dispatch`, I start them by hand from the **Actions** tab with **Run workflow**. They don't run automatically on pull requests or pushes yet (see Future improvements).
@@ -162,11 +162,12 @@ Both workflows upload reports and traces as artifacts. Because they use `workflo
 Large suites get slow, so I split the run into shards in two places:
 
 - **GitHub Actions (`sharded-tests.yml`):** a matrix of 4 shards, followed by a merge job.
+
+![Sharded Playwright tests in GitHub Actions]<img width="1920" height="1020" alt="image" src="https://github.com/user-attachments/assets/4f970398-cd5a-49f4-a26c-826e48521800" />
+
 - **Docker (locally):** 4 shards running side by side (`shard1` to `shard4`) from `docker-compose.shard.yml`.
 
 Every shard produces its own partial report, and the merge step combines them into one report:
-
-![Merging shard reports](docs/images/merge-reports.png)
 
 ```
 Merging 4 shards into reporting-labs-merged
