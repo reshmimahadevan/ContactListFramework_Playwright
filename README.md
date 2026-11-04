@@ -149,13 +149,7 @@ The same promotion flow as the Jenkins pipeline, built as chained jobs: Build & 
 ![Master CI/CD pipeline in GitHub Actions]<img width="1920" height="1020" alt="image" src="https://github.com/user-attachments/assets/3a9833b7-db97-4407-9465-be8a1dbad0b8" />
 
 
-**2. `sharded-tests.yml` – Sharded Playwright Tests**
-Runs the suite as a matrix of 4 parallel shards (Shard 1/4 to 4/4), then a **Merge All Reports** job combines the partial reports into one. The latest run finished in about 1.5 minutes, with the merge step taking 23 seconds.
-
-
-
-
-Both workflows upload reports and traces as artifacts. Because they use `workflow_dispatch`, I start them by hand from the **Actions** tab with **Run workflow**. They don't run automatically on pull requests or pushes yet (see Future improvements).
+**2. `sharded-tests.yml` – Sharded Playwright Tests** -- See below
 
 ### Sharding and a merged report
 
